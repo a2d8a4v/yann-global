@@ -105,7 +105,7 @@ class CPT_INITIAL {
 						'has_archive',
 						'menu_position',
 						'menu_icon',
-						'register_meta_box_cb',
+
 						'delete_with_user',
 						'show_in_rest',
 						'rest_base',

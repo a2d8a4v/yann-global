@@ -7,114 +7,301 @@
 class CPT_METABOXES {
 
 	private $errors;
-	private $meta_keys;
+	private $labname;
+	public $params;
+
+	/**
+	 * This plugin's instance.
+	 *
+	 * @var CPT_METABOXES
+	 */
+	private static $instance;
+
+	/**
+	 * Registers the plugin.
+	 */
+	public static function register($run, $params) {
+		if ( $run === TRUE ) {
+			if ( null === self::$instance ) {
+				self::$instance = new CPT_METABOXES($params);
+				self::$run = $run;
+			}
+		}
+	}
+
 
 	/**
 	 * Set up the hooks and default values
 	 */
-	public function __construct() {
+	public function __construct($params=array()) {
+
+		$this->run = TRUE;
 		$this->errors = False;
 		$this->YANN_root_user_id = 1;
-	}
+		$this->labname = "NTNUSMIL";
 
-
-	public function CPT_METABOXES_validation_enqueue_resources( $type, $hook, $posttype, $_get ) {
-
-		// $hook
-		if (! in_array(
-				$type,
-				array(
-					'cpt',
-					'profile',
-				)
-			  )
-		   ) {
-			throw new Exception('cpt or profile option only!');
+		// validation
+		$this->CPT_METABOXES_params_validation($params);
+		// assign
+		foreach ($params as $k => $v) {
+			$this->$k = $v;
 		}
 
-		if ($type === 'cpt') {
+		// run hooks
+		$this->CPT_METABOXES_preload();
+	}
 
-			if ( ! in_array( $hook , array('post.php', 'post-new.php') ) ) {
-				return FALSE;
+	private function CPT_METABOXES_params_validation( $cpt_metaboxes_array ) {
+
+	}
+
+	private function CPT_METABOXES_preload() {
+
+		// register metabox
+        add_action( 'add_meta_boxes', array( $this, 'CPT_METABOXES_add_meta_boxes'  ), 10, 0 );
+
+	}
+
+	/**
+	 * Input Metabox for CPTs, input type
+	 * 
+	 */
+	public function CPT_METABOXES_add_meta_boxes() {
+
+		for ($x=0; $x<count($this->add_meta_box); $x++) {
+
+			// args for metabox
+			$metabox_args = $this->add_meta_box[$x];
+
+			// items
+			$id = $metabox_args['id'];
+			$type = $metabox_args['box_input_type'];
+			$func = array( $this, "CPT_METABOXES_type_{$type}_html_content" );
+			$position = $metabox_args['position'];
+			$priority = $metabox_args['priority'];
+			$box_title = $metabox_args['box_title'];
+
+			// callback args
+			$box_input_args = $metabox_args['box_input_args'];
+			$box_input_args['id'] = $id;
+
+			switch ( $type ) {
+
+				case ( 'input' ):
+					add_meta_box(
+						"{$id}-box",
+						$box_title,
+						$func,
+						$this->posttype,
+						$position,
+						$priority,
+						$box_input_args
+					);
+					break;
+
+				case ( 'monoselect' ):
+					add_meta_box(
+						"{$id}-box",
+						$box_title,
+						$func,
+						$this->posttype,
+						$position,
+						$priority,
+						$box_input_args
+					);
+					break;
+
+				case ( 'fileupload' ):
+					add_meta_box(
+						"{$id}-box",
+						$box_title,
+						$func,
+						$this->posttype,
+						$position,
+						$priority,
+						$box_input_args
+					);
+					break;
 			}
+
+		}
+	}
+
+	/**
+	 * Input Metabox for CPTs - input
+	 * 
+	 */
+	public function CPT_METABOXES_type_input_html_content( $post, $callback_args ) {
+
+		// variables
+		global $post;
+		$box_input_args = $callback_args['args'];
+		$id = $box_input_args['id'];
+		$input_title = $box_input_args['input_title'];
+		$input_type = $box_input_args['type'];
+		$input_class = $box_input_args['class'];
+		$autocomplete = $box_input_args['autocomplete']?'on':'off';
+		$placeholder = $box_input_args['placeholder'];
+		$post_meta_key = $box_input_args['post_meta_key'];
+		$invalid_feedbacks = $box_input_args['invalid_feedbacks'];
+
+		// metas
+		$meta_get = get_post_meta( $post->ID , $post_meta_key , true );
+		$meta_field_data = $meta_get ? $meta_get : '';
+		$input_placeholder = empty($meta_field_data) ? $placeholder : $meta_field_data;
+
+		// content
+		echo '<input hidden type="text" name="'.$id.'_nonce" value="' . wp_create_nonce() . '">
+				<table class="form-table">
+					<tbody>
+						<tr>
+							<th><label for="'.$id.'">'.$input_title.'</label></th>
+							<td>
+								<div>';
+		echo '<input type="'.$input_type.'" autocomplete="'.$autocomplete.'" id="'.$id.'" class="'.$input_class.'" name="'.$id.'" placeholder="'.$input_placeholder.'" value="'.$meta_field_data.'"></p>';
+		foreach($invalid_feedbacks as $invalid_feedback) {
+			echo '<div class="invalid-feedback">'.$invalid_feedback.'</div>';
+		}
+		echo '</div></td></tr></tbody></table>';
+	}
+
+	/**
+	 * Input Metabox for CPTs - monoselect
+	 * 
+	 * :See @https://rudrastyh.com/wordpress/meta-boxes.html
+	 * 
+	 */
+	public function CPT_METABOXES_type_monoselect_html_content( $post, $callback_args ) {
+
+		// variables
+		global $post;
+		$box_input_args = $callback_args['args'];
+		$id = $box_input_args['id'];
+		$input_title = $box_input_args['input_title'];
+		$post_meta_key = $box_input_args['post_meta_key'];
+		$options = $box_input_args['options'];
+		$invalid_feedbacks = $box_input_args['invalid_feedbacks'];
+
+		// metas
+		$meta_get = get_post_meta( $post->ID , $post_meta_key , true );
+		$meta_field_data = $meta_get ? $meta_get : '';
+
+		// content
+		echo '<input hidden type="text" name="'.$id.'_nonce" value="' . wp_create_nonce() . '">';
+		echo '<table class="form-table">
+				<tbody>
+					<tr>
+						<th><label for="'.$id.'">'.$input_title.'</label></th>
+						<td><div>
+							<select id="'.$id.'" name="'.$id.'">';
+		echo '<option value="">請選擇一個項目</option>';
+		foreach($options as $key => $val) {
+			echo '<option value="'.$key.'"' . selected( $key, $meta_field_data, false ) . '>'.$val.'</option>';
+		}
+		echo '</select>';
+		foreach($invalid_feedbacks as $invalid_feedback) {
+			echo '<div class="invalid-feedback">'.$invalid_feedback.'</div>';
+		}
+		echo '</div></td></tr></tbody></table>';
+	}
+
+	/**
+	 * Input Metabox for CPTs - multiselect
+	 * 
+	 * :See @https://rudrastyh.com/wordpress/meta-boxes.html
+	 * :See @https://rudrastyh.com/wordpress/select2-for-metaboxes-with-ajax.html
+	 * :See @https://stackoverflow.com/questions/34131623/wp-user-query-from-meta-key-and-orderby-secondary-meta-key
+	 * 
+	 */
+	public function CPT_METABOXES_type_multiselect_html_content() {
+
+		// variables
+		global $post;
+		$box_input_args = $callback_args['args'];
+		$id = $box_input_args['id'];
+		$input_title = $box_input_args['input_title'];
+		$post_meta_key = $box_input_args['post_meta_key'];
+		$search_type = $box_input_args['search_type'];
+		$search_type_args = $box_input_args['search_type_args'];
+		$invalid_feedbacks = $box_input_args['invalid_feedbacks'];
 	
-			if ( isset($_get['post_type']) && $_get['post_type'] !== $posttype ) {
-				return FALSE;
-			} else if ( isset($_get['post']) && get_post($_get['post'])->post_type !== $posttype ) {
-				return FALSE;
-			}
-
-		} else if ($type === 'profile') {
-
-			if ( !in_array( $hook , array( 'profile.php' , 'user-edit.php' ) ) ) {
-				return FALSE;
-			}
-
+		// html init
+		$html = "";
+	
+		// add html
+		$html .= '<input hidden type="text" name="'.$id.'_nonce" value="' . wp_create_nonce() . '">';
+		$html .= '<table class="form-table"><tbody><tr><th><label for="'.$id.'">'.$input_title.'</label></th><td><div><select id="'.$id.'" name="'.$id.'[]" multiple="multiple" style="width:99%;max-width:25em;">';
+	
+		switch ($search_type) {
+			case ( 'user' ):
+				// metas
+				$meta_get = get_post_meta( $post->ID , $post_meta_key , true );
+	
+				if ( $authors = get_users( $search_type_args ) ) {
+					foreach( $authors as $author ) {
+						$name = $author->last_name.$author->first_name." (".$author->nickname.")";
+						$name = ( mb_strlen( $name ) > 20 ) ? mb_substr( $name, 0, 19 ) . '...' : $name;
+						$selected = ( is_array( $meta_get ) && in_array( $author->ID, $meta_get ) ) ? ' selected="selected"' : '';
+						$html .= '<option value="' . $author->ID . '" '.$selected.'>' . $name . '</option>';
+					}
+				}
+				if ( $post->post_status == 'auto-draft' && empty($meta_get) ) {
+					$author = wp_get_current_user();
+					$name   = $author->last_name.$author->first_name." (".$author->nickname.")";
+					$name   = ( mb_strlen( $name ) > 20 ) ? mb_substr( $name, 0, 19 ) . '...' : $name;
+					$html  .= '<option value="' . $author->ID . '" selected="selected">' . $name . '</option>';
+				}
+				break;
+	
+			case ( 'post' ):
+				// metas
+				$meta_get = get_post_meta( $post->ID , $post_meta_key , true );
+	
+				break;
+	
+			case ( 'option' ):
+				// variables
+				$db_option = get_option( $search_type_args );
+				$db_default_args = $box_input_args['db_default_args'];
+				$db_text_spliter = $box_input_args['db_text_spliter'];
+	
+				foreach( $db_default_args as $slug => $name ) {
+					$comb = $name.$spliter.$slug;
+					$html .= '<option value="' . $comb . '" selected=selected locked=locked ids=' . $comb . '>' . $comb . '</option>';
+				}
+		
+				if ( !empty($db_option) ) {
+					foreach( $db_option as $slug => $name ) {
+						$comb = $name.$spliter.$slug;
+						$html .= '<option value="' . $comb . '" selected=selected ids=' . $comb . '>' . $comb . '</option>';
+					}
+				}
+	
+				break;
 		}
-
-		return TRUE;
+	
+		$html .= '</select>';
+		foreach($invalid_feedbacks as $invalid_feedback) {
+			echo '<div class="invalid-feedback">'.$invalid_feedback.'</div>';
+		}
+		$html .= '</div></td></tr></tbody></table>';
+	
+		echo $html;
 	}
 
-	public function CPT_INITIAL__if_posttype_call_user_func_array( $call_func, $posttype, $args_call_func=array() ) {
-		
-		// validation
-		if (! (is_string($call_func)||is_array($call_func))) {
-			throw new Exception("call_func should be a string or an array!");
-		}
-		if (! is_string($posttype)) {
-			throw new Exception("posttype should be a string!");
-		}
-		if (! is_array($args_call_func)) {
-			throw new Exception("args_call_func should be an array!");
-		}
+	/**
+	 * Input Metabox for CPTs - fileupload
+	 * 
+	 */
+	public function CPT_METABOXES_type_fileupload_html_content( $post, $callback_args ) {
 
-		// variable
-		global $typenow;
+		// variables
+		$box_input_args = $callback_args['args'];
+		$args = $box_input_args['object_init_args'];
 
-		// is_this
-		if ( $typenow && $typenow === $posttype ) {
-			call_user_func_array($call_func, $args_call_func);
-		}
-		if ( isset($_REQUEST["post"]) && get_post_type($_REQUEST["post"]) === $posttype ) {
-			call_user_func_array($call_func, $args_call_func);
-		}
-	}
+		$new_UPLOAD_BOX = new UPLOAD_BOX( $args );
+		$new_UPLOAD_BOX->UPLOAD_BOX_input_for_files_upload();
 
-	public function CPT_INITIAL__if_posttype_add_filter($hook, $call_func, $prior, $params_num, $posttype ) {
-		
-		// validation
-		if (! is_string($hook)) {
-			throw new Exception("hook should be a string!");
-		}
-		if (! is_array($call_func)) {
-			throw new Exception("call_func should be an array!");
-		}
-		if (! is_int($prior)) {
-			throw new Exception("prior should be a int value!");
-			if (intval($prior) < 0) {
-				throw new Exception("prior should be bigger than 0!");
-			}
-		}
-		if (! is_int($params_num)) {
-			throw new Exception("params_num should be a int value!");
-			if (intval($params_num) < 0) {
-				throw new Exception("params_num should be bigger than 0!");
-			}
-		}
-		if (! is_string($posttype)) {
-			throw new Exception("posttype should be a string!");
-		}
-
-		// variable
-		global $typenow;
-
-		// is_this
-		if ( $typenow && $typenow === $posttype ) {
-			add_filter($hook , $call_func, $prior, $params_num);
-		}
-		if ( isset($_REQUEST["post"]) && get_post_type($_REQUEST["post"]) === $posttype ) {
-			add_filter($hook , $call_func, $prior, $params_num);
-		}
 	}
 
 }
