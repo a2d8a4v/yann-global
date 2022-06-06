@@ -244,15 +244,11 @@ class CPT_METABOXES {
 									}
 								}
 								break;
-						} 
-
+						}
 					}
 				}
-
-
 			}
 		}
-
 	}
 
 	private function CPT_METABOXES_preload() {
