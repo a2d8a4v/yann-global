@@ -16,6 +16,8 @@
 require_once dirname( __FILE__ ) . '/includes/class-global-tweak.php';
 require_once dirname( __FILE__ ) . '/includes/class-cpt-initial.php';
 require_once dirname( __FILE__ ) . '/includes/class-cpt-utils.php';
+require_once dirname( __FILE__ ) . '/includes/class-cpt-metaboxes.php';
+require_once dirname( __FILE__ ) . '/includes/class-cpt-save-delete.php';
 require_once dirname( __FILE__ ) . '/includes/class-cpt-custom.php';
 require_once dirname( __FILE__ ) . '/includes/class-utils.php';
 require_once dirname( __FILE__ ) . '/includes/class-db-sql.php';
