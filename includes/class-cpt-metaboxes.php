@@ -53,6 +53,193 @@ class CPT_METABOXES {
 
 	private function CPT_METABOXES_params_validation( $cpt_metaboxes_array ) {
 
+		// first is the $cpt_initialization_array
+		if (empty($cpt_metaboxes_array)) {
+			throw new Exception("Arguments shouldn't be empty!");
+		}
+
+		foreach($cpt_metaboxes_array as $k => $v) {
+			if (! in_array($k,
+					array(
+						'posttype',
+						'add_meta_box',
+					)
+				)
+			) {
+				throw new Exception("Key {$k} is not ready!");
+			}
+
+			if ($k === 'posttype') {
+				if (! is_string($v)) {
+					throw new Exception("Value of key {$k} should be a string type!");
+				}
+			}
+			if ($k === 'add_meta_box') {
+				if (! is_array($v)) {
+					throw new Exception("Value of key {$k} should be an array");
+				}
+
+				foreach($v as $a_m_b => $a_m_b_v) {
+					if (! in_array($a_m_b,
+							array(
+								'box_title',
+								'id',
+								'position',
+								'priority',
+								'box_input_type',
+								'box_input_args',
+							)
+						)
+					) {
+						throw new Exception("Key {$a_m_b} in {$k} is not ready!");
+					}
+					if (in_array($a_m_b,
+							array(
+								'box_title',
+								'id',
+								'position',
+								'priority',
+								'box_input_type',
+							)
+						)
+					) {
+						if (! is_string($a_m_b_v)) {
+							throw new Exception("Value of key {$a_m_b} should be a string");
+						}
+					}
+					if (in_array($a_m_b,
+							array(
+								'box_input_args'
+							)
+						)
+					) {
+						if (! is_array($a_m_b_v)) {
+							throw new Exception("Value of key {$a_m_b} should be an array");
+						}
+
+						switch ($v['box_input_type']) {
+							case ('input'):
+								foreach ($a_m_b_v as $b_i_a => $b_i_a_v) {
+									if (! in_array(
+											$b_i_a, array(
+												'input_title',
+												'type',
+												'class',
+												'autocomplete',
+												'placeholder',
+												'post_meta_key',
+												'invalid_feedbacks'
+											)
+										)
+									) {
+										throw new Exception("Key {$b_i_a} is not ready for input type!");
+									}
+									if (in_array(
+											$b_i_a, 
+											array(
+												'invalid_feedbacks',
+											)
+										)
+									) {
+										if (! is_array($b_i_a_v)) {
+											throw new Exception("Value of key {$b_i_a} should be an array");
+										}
+									}
+									if (in_array(
+											$b_i_a, 
+											array(
+												'input_title',
+												'type',
+												'class',
+												'placeholder',
+												'post_meta_key',
+											)
+										)
+									) {
+										if (! is_array($b_i_a_v)) {
+											throw new Exception("Value of key {$b_i_a} should be a string");
+										}
+									}
+									if (in_array(
+											$b_i_a, 
+											array(
+												'autocomplete',
+											)
+										)
+									) {
+										if (! is_bool($b_i_a_v)) {
+											throw new Exception("Value of key {$b_i_a} should be a boolean");
+										}
+									}
+								}
+
+								break;
+
+							case ('monoselect'):
+								foreach ($a_m_b_v as $b_i_a => $b_i_a_v) {
+									if (! in_array(
+											$b_i_a, array(
+												'input_title',
+												'post_meta_key',
+												'options',
+												'invalid_feedbacks'
+											)
+										)
+									) {
+										throw new Exception("Key {$b_i_a} is not ready for monoselect type!");
+									}
+									if (in_array(
+											$b_i_a, 
+											array(
+												'options',
+												'invalid_feedbacks'
+											)
+										)
+									) {
+										if (! is_array($b_i_a_v)) {
+											throw new Exception("Value of key {$b_i_a} should be an array");
+										}
+									}
+
+									if (in_array(
+											$b_i_a, 
+											array(
+												'input_title',
+												'post_meta_key'
+											)
+										)
+									) {
+										if (! is_array($b_i_a_v)) {
+											throw new Exception("Value of key {$b_i_a} should be a string");
+										}
+									}
+								}
+								break;
+
+							case ('fileupload'):
+								foreach ($a_m_b_v as $b_i_a => $b_i_a_v) {
+									if (! in_array(
+											$b_i_a, array(
+												'object_init_args'
+											)
+										)
+									) {
+										throw new Exception("Key {$b_i_a} is not ready for fileupload type!");
+									}
+									if (! is_array($b_i_a_v)) {
+										throw new Exception("Value of key {$b_i_a} should be an array");
+									}
+								}
+								break;
+						} 
+
+					}
+				}
+
+
+			}
+		}
+
 	}
 
 	private function CPT_METABOXES_preload() {
@@ -194,6 +381,7 @@ class CPT_METABOXES {
 						<th><label for="'.$id.'">'.$input_title.'</label></th>
 						<td><div>
 							<select id="'.$id.'" name="'.$id.'">';
+		// do not add 'disabled' 'selected' 'hidden' 3 attributes here
 		echo '<option value="">請選擇一個項目</option>';
 		foreach($options as $key => $val) {
 			echo '<option value="'.$key.'"' . selected( $key, $meta_field_data, false ) . '>'.$val.'</option>';
