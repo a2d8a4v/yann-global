@@ -106,6 +106,19 @@ class CPT_METABOXES {
 						if (! is_string($a_m_b_v)) {
 							throw new Exception("Value of key {$a_m_b} should be a string");
 						}
+						if ($a_m_b === 'box_input_type') {
+							if (! in_array(
+									$a_m_b,
+									array(
+										'input',
+										'monoselect',
+										'fileupload'
+									)
+								)
+							   ) {
+								throw new Exception("Value of key {$a_m_b} should only has 'input', 'monoselect', 'fileupload' three options!");
+							}
+						}
 					}
 					if (in_array($a_m_b,
 							array(
