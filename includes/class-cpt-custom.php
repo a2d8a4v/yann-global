@@ -55,6 +55,7 @@ class CPT_CUSTOM {
 						'posttype',
 						'trash_messages',
 						'update_messages',
+						'update_messages_unset',
 						'post_custom_columns',
 						'post_unset_columns',
 						'remove_row_actions',
@@ -75,6 +76,7 @@ class CPT_CUSTOM {
 					array(
 						'trash_messages',
 						'update_messages',
+						'update_messages_unset',
 						'post_custom_columns',
 						'post_unset_columns',
 						'remove_row_actions',
@@ -134,6 +136,28 @@ class CPT_CUSTOM {
 				foreach(array_values($v) as $u_m_v) {
 					if (! (is_string($u_m_v)||is_bool($u_m_v))) {
 						throw new Exception("Value of key {$k} should be a dictionary with values in string or boolean types!");
+					}
+				}
+			}
+			if ($k === 'update_messages_unset'){
+				foreach($v as $u_m_u_v) {
+					if (! is_array($u_m_u_v)) {
+						throw new Exception("Value of key {$k} should be an array!");
+					}
+					foreach($u_m_u_v as $u_m_u_v_k => $u_m_u_v_v) {
+						if (! in_array(
+								$u_m_u_v_k,
+								array(
+									'action',
+									'transient_label',
+								)
+							)
+					   	) {
+							throw new Exception("Arrays inside the items of key {$k} should have both 'action' and 'transient_label' keys!");
+						}
+						if (! is_string($u_m_u_v_v)) {
+							throw new Exception("Value of key {$u_m_u_v_k} should be the string type!");
+						}
 					}
 				}
 			}
@@ -244,6 +268,18 @@ class CPT_CUSTOM {
 		if ( $post->post_type === $this->posttype ) {
 			$messages[$this->posttype] = isset( $messages[$this->posttype] ) ? $messages[$this->posttype] : array();
 			$messages[$this->posttype] = $this->update_messages;
+		}
+		$current_USERID = get_current_user_id();
+
+		foreach($this->update_messages_unset as $u_m_u_v) {
+			$action = $u_m_u_v['action'];
+			$transient_label = $u_m_u_v['transient_label'];
+
+			if ( $err = get_transient( "CPT_{$this->posttype}_{$action}_{$transient_label}_{$post->ID}_{$current_USERID}" ) ) {
+				if ( !empty($err) ) {
+					unset($messages[$this->posttype][1]);
+				}
+			}
 		}
 		return $messages;
 	}

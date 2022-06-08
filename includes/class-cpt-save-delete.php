@@ -326,6 +326,8 @@ class CPT_SAVE_DELETE {
 				)
 			);
 
+			return $new_CPT_MESSAGES->return_result;
+
 		} else {
 
 			// normal saving
@@ -345,6 +347,9 @@ class CPT_SAVE_DELETE {
 					'redirect' => array()
 				)
 			);
+
+			return $new_CPT_MESSAGES->return_result;
+
 		}
 
 		return TRUE;
@@ -362,7 +367,12 @@ class CPT_SAVE_DELETE {
 		$post_meta_key = $box_input_args['post_meta_key'];
 
 		// validation
-		if ($this->CPT_SAVE_DELETE_save_validation( $post_id, $_post, $_request, $box_input_args )) {
+		if ($validation = $this->CPT_SAVE_DELETE_save_validation( $post_id, $_post, $_request, $box_input_args )) {
+
+			if ($validation->has_errors()) {
+				return $post_id;
+			}
+
 			// Its safe for us to save the data !
 			if( isset( $_post[ $id ] ) ) {
 				update_post_meta( $post_id, $post_meta_key, sanitize_text_field( $_post[ $id ] ) );
@@ -385,7 +395,12 @@ class CPT_SAVE_DELETE {
 		$post_meta_key = $box_input_args['post_meta_key'];
 
 		// validation
-		if ($this->CPT_SAVE_DELETE_save_validation( $post_id, $_post, $_request, $box_input_args )) {
+		if ($validation = $this->CPT_SAVE_DELETE_save_validation( $post_id, $_post, $_request, $box_input_args )) {
+
+			if ($validation->has_errors()) {
+				return $post_id;
+			}
+
 			// Its safe for us to save the data !
 			if( isset( $_post[ $id ] ) ) {
 				update_post_meta( $post_id, $post_meta_key, sanitize_text_field( $_post[ $id ] ) );
@@ -418,7 +433,12 @@ class CPT_SAVE_DELETE {
 		$post_meta_key = $box_input_args['post_meta_key'];
 
 		// validation
-		if ($this->CPT_SAVE_DELETE_save_validation( $post_id, $_post, $_request, $box_input_args )) {
+		if ($validation = $this->CPT_SAVE_DELETE_save_validation( $post_id, $_post, $_request, $box_input_args )) {
+
+			if ($validation->has_errors()) {
+				return $post_id;
+			}
+
 			// Its safe for us to save the data !
 			if( isset( $_post[ $id ] ) ) {
 				update_post_meta( $post_id, $post_meta_key, sanitize_text_field( $_post[ $id ] ) );

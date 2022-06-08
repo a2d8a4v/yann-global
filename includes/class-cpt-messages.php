@@ -9,6 +9,7 @@ class CPT_MESSAGES {
 	private $errors;
 	private $labname;
 	public $params;
+	public $return_result;
 
 	/**
 	 * This plugin's instance.
@@ -39,6 +40,7 @@ class CPT_MESSAGES {
 		$this->errors = False;
 		$this->YANN_root_user_id = 1;
 		$this->labname = "NTNUSMIL";
+		$this->return_result = '';
 
 		// validation
 		// $this->CPT_MESSAGES_params_validation($params);
@@ -97,14 +99,13 @@ class CPT_MESSAGES {
 
 		if ( intval($author_ID) !== intval($current_USERID) ) {
 
-
 			$user_name = get_user_meta( $author_ID , 'last_name' , true ) . get_user_meta( $author_ID , 'first_name' , true );
 
 			foreach($this->action_msg as $k => $msg) {
 				$error->add("CPT_{$this->posttype}_{$this->action}_{$k}_{$this->msg_type}", $msg);
 			}
 
-			set_transient("CPT_{$this->posttype}_{$this->action}_{$this->transient_label}_{$current_USERID}", $error, $this->time_keep);
+			set_transient("CPT_{$this->posttype}_{$this->action}_{$this->transient_label}_{$post->ID}_{$current_USERID}", $error, $this->time_keep);
 
 			if (! empty($this->redirect)) {
 				wp_redirect(
@@ -116,7 +117,9 @@ class CPT_MESSAGES {
 				exit();
 			}
 
-			return $post->ID;
+			$this->return_result = $error;
+
+			return $this->return_result;
 		}
 		
 	}
@@ -135,7 +138,7 @@ class CPT_MESSAGES {
 
 			$user_name = get_user_meta( $post->post_author , 'last_name' , true ) . get_user_meta( $post->post_author , 'first_name' , true );
 
-			if ( $tmp = get_post_meta( $post_id, $this->post_meta_key , true ) ) {
+			if ( $tmp = get_post_meta( $post->ID, $this->post_meta_key , true ) ) {
 
 				if ( empty($tmp) ) {
 
@@ -158,9 +161,11 @@ class CPT_MESSAGES {
 				}
 			}
 
-			set_transient("CPT_{$this->posttype}_{$this->action}_{$this->transient_label}_{$post_id}_{$current_USERID}", $error, $this->time_keep);
+			set_transient("CPT_{$this->posttype}_{$this->action}_{$this->transient_label}_{$post->ID}_{$current_USERID}", $error, $this->time_keep);
 
-			return $error;
+			$this->return_result = $error;
+
+			return $this->return_result;
 		}
 		
 	}
@@ -199,7 +204,6 @@ class CPT_MESSAGES {
 	/**
 	 * stop move to trash if is not author
 	 * 
-	 * @param object $post_id
 	 */
 	public function CPT_MESSAGES_deleting_multiple_posts_error_message() {
 
