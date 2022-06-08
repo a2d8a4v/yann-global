@@ -149,6 +149,7 @@ class CPT_CUSTOM {
 								$u_m_u_v_k,
 								array(
 									'action',
+									'find_action',
 									'transient_label',
 								)
 							)
@@ -265,17 +266,25 @@ class CPT_CUSTOM {
 	 */
 	public function CPT_INITIAL_bulk_change_post_updated_labels($messages) {
 		global $post;
+
 		if ( $post->post_type === $this->posttype ) {
 			$messages[$this->posttype] = isset( $messages[$this->posttype] ) ? $messages[$this->posttype] : array();
 			$messages[$this->posttype] = $this->update_messages;
 		}
-		$current_USERID = get_current_user_id();
 
 		foreach($this->update_messages_unset as $u_m_u_v) {
-			$action = $u_m_u_v['action'];
-			$transient_label = $u_m_u_v['transient_label'];
 
-			if ( $err = get_transient( "CPT_{$this->posttype}_{$action}_{$transient_label}_{$post->ID}_{$current_USERID}" ) ) {
+			$new_CPT_MESSAGES = new CPT_MESSAGES(
+				array(
+					'posttype' => $this->posttype,
+					'post_obj' => $post,
+					'action' => $u_m_u_v['action'],
+					'find_action' => $u_m_u_v['find_action'],
+					'transient_label' => $u_m_u_v['transient_label']
+				)
+			);
+
+			if ( $err = get_transient( $new_CPT_MESSAGES->return_result ) ) {
 				if ( !empty($err) ) {
 					unset($messages[$this->posttype][1]);
 				}

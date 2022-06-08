@@ -86,6 +86,14 @@ class CPT_MESSAGES {
 				// display admin notices for CPTs if not the post author edited
 				add_action( 'admin_notices', array( $this, 'CPT_MESSAGES_reject_non_author_editing_notice' ), 10, 0 );
 				break;
+
+			case ('get_transient'):
+
+				$func = array($this, "CPT_MESSAGES_{$this->action}");
+				$cpt_utils->CPT_UTILS__if_posttype_call_user_func_array( $func, $this->posttype, array() );
+
+				break;
+
 		}
 	}
 
@@ -250,6 +258,18 @@ class CPT_MESSAGES {
 				exit();
 			}
 		}
+	}
+
+	public function CPT_MESSAGES_get_transient() {
+		
+		// variables
+		$post = $this->post_obj;
+		$current_USERID = get_current_user_id();
+
+		$transient = "CPT_{$this->posttype}_{$this->find_action}_{$this->transient_label}_{$post->ID}_{$current_USERID}";
+
+		$this->return_result = $transient;
+		return $this->return_result;
 	}
 
 
