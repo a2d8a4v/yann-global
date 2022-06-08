@@ -58,102 +58,95 @@ class CPT_SAVE_DELETE {
 			throw new Exception("Arguments shouldn't be empty!");
 		}
 
-			foreach($cpt_metaboxes_array as $k => $v) {
-				if (! in_array($k,
-						array(
-							'posttype',
-							'added_meta_box',
-						)
+		foreach($cpt_metaboxes_array as $k => $v) {
+			if (! in_array($k,
+					array(
+						'posttype',
+						'added_meta_box',
+						'joystick_types_arr',
+						'table_for_uploaded_file'
 					)
-				) {
-					throw new Exception("Key {$k} is not ready!");
-				}
+				)
+			) {
+				throw new Exception("Key {$k} is not ready!");
+			}
 
-				if ($k === 'posttype') {
-					if (! is_string($v)) {
-						throw new Exception("Value of key {$k} should be a string type!");
+			if ($k === 'posttype') {
+				if (! is_string($v)) {
+					throw new Exception("Value of key {$k} should be a string type!");
+				}
+			}
+			if ($k === 'joystick_types_arr') {
+				if (! is_array($v)) {
+					throw new Exception("Value of key {$k} should be an array!");
+				}
+				foreach($v as $j_t_a_v) {
+					if (! is_string($j_t_a_v)) {
+						throw new Exception("Value of key {$k} should be a array with items of string type!");
 					}
 				}
-				if ($k === 'added_meta_box') {
+			}
+			if ($k === 'table_for_uploaded_file') {
+				if (! is_string($v)) {
+					throw new Exception("Value of key {$k} should be a string type!");
+				}
+			}
+			if ($k === 'added_meta_box') {
 
-					if (! is_array($v)) {
-						throw new Exception("Value of key {$k} should be an array");
-					}
+				if (! is_array($v)) {
+					throw new Exception("Value of key {$k} should be an array");
+				}
 
-					for ($x=0; $x<count($v); $x++) {
+				for ($x=0; $x<count($v); $x++) {
 
-						$item = $v[$x];
+					$item = $v[$x];
 
-						foreach($item as $a_m_b => $a_m_b_v) {
-							if (! in_array($a_m_b,
-									array(
-										'id',
-										'box_input_type',
-										'box_input_args',
-									)
+					foreach($item as $a_m_b => $a_m_b_v) {
+						if (! in_array($a_m_b,
+								array(
+									'id',
+									'box_input_type',
+									'box_input_args',
 								)
-							) {
-								throw new Exception("Key {$a_m_b} in {$k} is not ready!");
+							)
+						) {
+							throw new Exception("Key {$a_m_b} in {$k} is not ready!");
+						}
+						if (in_array($a_m_b,
+								array(
+									'id',
+									'box_input_type',
+								)
+							)
+						) {
+							if (! is_string($a_m_b_v)) {
+								throw new Exception("Value of key {$a_m_b} should be a string");
 							}
-							if (in_array($a_m_b,
-									array(
-										'id',
-										'box_input_type',
-									)
-								)
-							) {
-								if (! is_string($a_m_b_v)) {
-									throw new Exception("Value of key {$a_m_b} should be a string");
-								}
-								if ($a_m_b === 'box_input_type') {
-									if (! in_array(
-											$a_m_b_v,
-											array(
-												'input',
-												'monoselect',
-												'fileupload'
-											)
+							if ($a_m_b === 'box_input_type') {
+								if (! in_array(
+										$a_m_b_v,
+										array(
+											'input',
+											'monoselect',
+											'multiselect',
+											'fileupload'
 										)
-									) {
-										throw new Exception("Value of key {$a_m_b} should only has 'input', 'monoselect', 'fileupload' three options!");
-									}
+									)
+								) {
+									throw new Exception("Value of key {$a_m_b} should only has 'input', 'monoselect', 'multiselect', 'fileupload' 4 options!");
 								}
 							}
-							if ($a_m_b === 'box_input_args') {
+						}
+						if ($a_m_b === 'box_input_args') {
 
-								if (! is_array($a_m_b_v)) {
-									throw new Exception("Value of key {$a_m_b} should be an array");
-								}
+							if (! is_array($a_m_b_v)) {
+								throw new Exception("Value of key {$a_m_b} should be an array");
+							}
 
-								switch ($item['box_input_type']) {
-									case ('input'):
-										foreach ($a_m_b_v as $b_i_a => $b_i_a_v) {
-											if (! in_array(
-													$b_i_a, array(
-														'post_meta_key',
-													)
-												)
-											) {
-												throw new Exception("Key {$b_i_a} is not ready for input type!");
-											}
-											if (in_array(
-													$b_i_a, 
-													array(
-														'post_meta_key',
-													)
-												)
-											) {
-												if (! is_string($b_i_a_v)) {
-													throw new Exception("Value of key {$b_i_a} should be a string");
-												}
-											}
-										}
-
-										break;
-
-									case ('monoselect'):
-										foreach ($a_m_b_v as $b_i_a => $b_i_a_v) {
-											if (! in_array(
+							switch ($item['box_input_type']) {
+								case ('input'):
+									foreach ($a_m_b_v as $b_i_a => $b_i_a_v) {
+										if (! in_array(
 												$b_i_a, array(
 													'post_meta_key',
 												)
@@ -172,24 +165,82 @@ class CPT_SAVE_DELETE {
 												throw new Exception("Value of key {$b_i_a} should be a string");
 											}
 										}
-										}
-										break;
+									}
 
-									case ('fileupload'):
-										break;
-								}
+									break;
+
+								case ('monoselect'):
+									foreach ($a_m_b_v as $b_i_a => $b_i_a_v) {
+										if (! in_array(
+											$b_i_a, array(
+												'post_meta_key',
+											)
+										)
+									) {
+										throw new Exception("Key {$b_i_a} is not ready for input type!");
+									}
+									if (in_array(
+											$b_i_a, 
+											array(
+												'post_meta_key',
+											)
+										)
+									) {
+										if (! is_string($b_i_a_v)) {
+											throw new Exception("Value of key {$b_i_a} should be a string");
+										}
+									}
+									}
+									break;
+
+								case ('fileupload'):
+									break;
+
+								case ('multiselect'):
+									foreach ($a_m_b_v as $b_i_a => $b_i_a_v) {
+										if (! in_array(
+											$b_i_a, array(
+												'post_meta_key',
+												'is_author_validation'
+											)
+										)
+									) {
+										throw new Exception("Key {$b_i_a} is not ready for input type!");
+									}
+									if (in_array(
+											$b_i_a, 
+											array(
+												'post_meta_key',
+												'is_author_validation'
+											)
+										)
+									) {
+										if (! is_string($b_i_a_v)) {
+											throw new Exception("Value of key {$b_i_a} should be a string");
+										}
+									}
+									}
+
+									break;
 							}
 						}
 					}
 				}
 			}
-
+		}
 	}
 
 	private function CPT_SAVE_DELETE_preload() {
 
 		// save function for customized input
 		add_action( 'save_post', array( $this, 'CPT_SAVE_DELETE_save_for_input' ), 10, 1 );
+
+		// @https://wordpress.stackexchange.com/questions/10678/function-to-execute-when-a-post-is-moved-to-trash
+		// @https://wordpress.stackexchange.com/questions/91049/hook-on-trash-post/91052
+		// fired after post moved to trash state
+		add_action( 'wp_trash_post' , array( $this,'CPT_SAVE_DELETE_trash_multiple_posts' ) , 10 , 1 );
+		add_action( 'before_delete_post' , array( $this, 'CPT_SAVE_DELETE_delete_post' ) , 10 , 1 );
+		add_action( 'wp_scheduled_auto_draft_delete', array( $this, 'CPT_SAVE_DELETE_delete_autodraft_post' ) , 10, 1 );
 
 	}
 
@@ -254,6 +305,48 @@ class CPT_SAVE_DELETE {
 			}
 		}
 
+		if (isset($box_input_args['is_author_validation']) && $box_input_args['is_author_validation'] === True) {
+			
+			// author validation
+			$new_CPT_MESSAGES = new CPT_MESSAGES(
+				array(
+					'posttype' => $this->posttype,
+					'post_obj' => get_post($post_id),
+					'msg_type' => 'error',
+					'action' => 'editing',
+					'act_for_type' => 'save_type_multiselect',
+					'action_msg' => array(
+						'non_author' => "必須為本篇作者才可以進行編輯。"
+					),
+					'post_meta_key' => $box_input_args['post_meta_key'],
+					'func_append' => array(),
+					'transient_label' => 'non_author',
+					'time_keep' => 45,
+					'redirect' => array()
+				)
+			);
+
+		} else {
+
+			// normal saving
+			$new_CPT_MESSAGES = new CPT_MESSAGES(
+				array(
+					'posttype' => $this->posttype,
+					'post_obj' => get_post($post_id),
+					'msg_type' => 'error',
+					'action' => 'editing',
+					'act_for_type' => 'save_type_input',
+					'action_msg' => array(
+						'non_author' => "必須為本篇作者才可以進行編輯。"
+					),
+					'func_append' => array(),
+					'transient_label' => 'non_author',
+					'time_keep' => 45,
+					'redirect' => array()
+				)
+			);
+		}
+
 		return TRUE;
 	}
 
@@ -271,7 +364,12 @@ class CPT_SAVE_DELETE {
 		// validation
 		if ($this->CPT_SAVE_DELETE_save_validation( $post_id, $_post, $_request, $box_input_args )) {
 			// Its safe for us to save the data !
-			update_post_meta( $post_id , $post_meta_key , wc_clean( wp_unslash( $_post[ $post_meta_key ] ) ) );
+			if( isset( $_post[ $id ] ) ) {
+				update_post_meta( $post_id, $post_meta_key, sanitize_text_field( $_post[ $id ] ) );
+			} else {
+				delete_post_meta( $post_id, $post_meta_key );
+			}
+			return $post_id;
 		}
 	}
 
@@ -297,4 +395,273 @@ class CPT_SAVE_DELETE {
 			return $post_id;
 		}
 	}
+
+	/**
+	 * Save function of customized inputs for type fileupload in CPTs
+	 * 
+	 * @param object $post_id, $_post, $_request, $box_input_args
+	 */
+	private function CPT_SAVE_DELETE_save_for_type_fileupload( $post_id, $_post, $_request, $box_input_args ) {
+		return;
+	}
+
+
+	/**
+	 * Save function of customized inputs for type fileupload in CPTs
+	 * 
+	 * @param object $post_id, $_post, $_request, $box_input_args
+	 */
+	private function CPT_SAVE_DELETE_save_for_type_multiselect( $post_id, $_post, $_request, $box_input_args ) {
+
+		// variables
+		$id = $box_input_args['id'];
+		$post_meta_key = $box_input_args['post_meta_key'];
+
+		// validation
+		if ($this->CPT_SAVE_DELETE_save_validation( $post_id, $_post, $_request, $box_input_args )) {
+			// Its safe for us to save the data !
+			if( isset( $_post[ $id ] ) ) {
+				update_post_meta( $post_id, $post_meta_key, sanitize_text_field( $_post[ $id ] ) );
+			} else {
+				delete_post_meta( $post_id, $post_meta_key );
+			}
+			return $post_id;
+		}
+	}
+
+	/**
+	 * stop move to trash if is not author
+	 * 
+	 * @param object $post_id
+	 */
+	public function CPT_SAVE_DELETE_trash_multiple_posts( $post_id ) {
+
+		if ( $_REQUEST['post_type'] !== $this->posttype ) {
+			return;
+		}
+
+		if ( isset( $_GET['post'] ) && is_array( $_GET['post'] ) ) {
+
+			$new_CPT_MESSAGES = new CPT_MESSAGES(
+				array(
+					'posttype' => $this->posttype,
+					'get_ojb'  => $_GET,
+					'msg_type' => 'error',
+					'action' => 'deleting',
+					'act_for_type' => 'multiple_posts',
+					'action_msg' => array(
+						'non_author' => "必須為本篇作者才可以進行刪除。"
+					),
+					'func_append' => array(),
+					'transient_label' => 'non_author',
+					'time_keep' => 45,
+					'redirect' => array(
+						'query' => array(
+							'post_type' => $this->posttype,
+							'post_status' => 'trash'
+						),
+						'url' => admin_url( 'edit.php' )
+					)
+				)
+			);
+
+		} else {
+
+			$new_CPT_MESSAGES = new CPT_MESSAGES(
+				array(
+					'posttype' => $this->posttype,
+					'post_obj' => get_post($post_id),
+					'msg_type' => 'error',
+					'action' => 'deleting',
+					'act_for_type' => 'single_post',
+					'action_msg' => array(
+						'non_author' => "必須為本篇作者才可以進行刪除。"
+					),
+					'func_append' => array(),
+					'transient_label' => 'non_author',
+					'time_keep' => 45,
+					'redirect' => array()
+				)
+			);
+
+		}
+	}
+
+	/**
+	 * stop delete if is not author
+	 * 
+	 * @param object $post_id, post id of post
+	 */
+	public function CPT_SAVE_DELETE_delete_post( $post_id ) {
+
+		$post = get_post($post_id);
+		// Should be this CPT meeting post author, otherwise deny
+		if ( $post->post_type !== $this->posttype ) {
+			return;
+		}
+		
+		$new_CPT_MESSAGES = new CPT_MESSAGES(
+			array(
+				'posttype' => $this->posttype,
+				'post_obj' => $post,
+				'msg_type' => 'error',
+				'action' => 'deleting',
+				'act_for_type' => 'single_post',
+				'action_msg' => array(
+					'non_author' => "必須為本篇作者才可以進行刪除。"
+				),
+				'func_append' => array(
+					array($this, 'CPT_SAVE_DELETE_move_to_trash_sql')
+				),
+				'transient_label' => 'non_author',
+				'time_keep' => 45,
+				'redirect' => array(
+					'query' => array(
+						'post_type' => $this->posttype,
+						'post_status' => 'trash'
+					),
+					'url' => admin_url( 'edit.php' )
+				)
+			)
+		);
+
+		// Delete the static files
+		$this->CPT_SAVE_DELETE_deleteUploadedFiles( $post_id );
+
+		// Deletion will start
+	}	
+
+
+	public function CPT_SAVE_DELETE_move_to_trash_sql( $postid ) {
+
+		global $wpdb;
+		$table_name = $wpdb->prefix . 'posts';
+
+		$wpdb->update(
+			$table_name,
+			array(
+				'post_status' => 'trash'
+			),
+			array(
+				'id' => $postid
+			)
+		);
+
+	}
+
+	/**
+	 * stop delete if is not author
+	 * 
+	 * @param object $wp_delete_auto_drafts, $post in array
+	 */
+	public function CPT_SAVE_DELETE_delete_autodraft_post( $wp_delete_auto_drafts ) {
+
+		foreach( $wp_delete_auto_drafts as $del_post ) {
+			if ( $del_post->post_type !== $this->posttype ) {
+				continue;
+			}
+
+			// Delete the static files
+			$this->CPT_SAVE_DELETE_deleteUploadedFiles( $del_post->ID );
+		}
+	}
+
+	/**
+	 * Remove uploaded files
+	 * 
+	 * @param object $post_id
+	 */
+	private function CPT_SAVE_DELETE_deleteUploadedFiles( $post_id ) {
+		global $wpdb;
+		$posttype  = $this->posttype;
+		$joysticks = $this->joystick_types_arr;
+		$labname   = $this->labname;
+
+		foreach ($joysticks as $joystick) {
+
+			// has file check
+			$table_name = $wpdb->prefix . $this->table_for_uploaded_file;
+			$DBsearch   = $wpdb->get_results ( "
+			SELECT * 
+			FROM  $table_name
+				WHERE postid = '".$post_id."'
+				AND CPTtype = '".$posttype."'
+				AND joystick = '".$joystick."'
+			" );
+
+			// Maybe multiple files
+			foreach($DBsearch as $fileinfo) {
+
+				$Year      = $fileinfo->year;
+				$micro     = $fileinfo->microtimestamp;
+				$filename  = $fileinfo->filename;
+				$timestamp = $fileinfo->timestamp;
+				// Upload dir path
+				if (!isset($this->upload_dir)) {
+					$this->upload_dir = '/CPT/' . $posttype . "/" . $joystick . "/" . $Year;
+				}
+				$dir = wp_upload_dir()['basedir'] . $this->upload_dir;
+
+				// Remove db record
+				$data = array(
+					'postid' => $post_id ,
+					'Labname' => $labname ,
+					'CPTtype' => $posttype ,
+					'joystick' => $joystick ,
+					'timestamp' => $timestamp ,
+					'microtimestamp' => $micro ,
+					'filename' => $filename ,
+					'year' => $Year,
+				);
+				$data_format = array( '%s' , '%s' , '%s' , '%s' , '%s' , '%s' , '%s' , '%s' );
+				$do_delete   = $wpdb->delete( $table_name , $data , $data_format );
+
+				// Delete files and folder
+				$this->CPT_SAVE_DELETE_rmDirRecursive( $dir . "/" . $post_id );
+				// If the Year level folder is also empty, just delete it
+				if ( $this->CPT_SAVE_DELETE_is_dir_empty( $dir ) ) {
+					rmdir($dir);
+				}
+				$this->upload_dir = "";
+			}
+		}
+	}
+
+	/**
+	 * Remove all files and the folder
+	 * 
+	 * @param object $dir, dir absolute path
+	 */
+	private function CPT_SAVE_DELETE_rmDirRecursive( $dir ) {
+		$it = new RecursiveDirectoryIterator($dir, RecursiveDirectoryIterator::SKIP_DOTS);
+		$files = new RecursiveIteratorIterator($it,
+					 RecursiveIteratorIterator::CHILD_FIRST);
+		foreach($files as $file) {
+			if ($file->isDir()){
+				rmdir($file->getRealPath());
+			} else {
+				unlink($file->getRealPath());
+			}
+		}
+		rmdir($dir);
+	}
+
+	/**
+	 * Check is empty folder
+	 * 
+	 * @param object $post_id, post id of post
+	 */
+	private function CPT_SAVE_DELETE_is_dir_empty($dir) {
+		$handle = opendir($dir);
+		while (false !== ($entry = readdir($handle))) {
+			if ($entry != "." && $entry != "..") {
+				closedir($handle);
+				return false;
+			}
+		}
+		closedir($handle);
+		return true;
+	}
+
+
 }
