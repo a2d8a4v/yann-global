@@ -124,11 +124,12 @@ class CPT_METABOXES {
 										array(
 											'input',
 											'monoselect',
+											'multiselect',
 											'fileupload'
 										)
 									)
 								) {
-									throw new Exception("Value of key {$a_m_b} should only has 'input', 'monoselect', 'fileupload' three options!");
+									throw new Exception("Value of key {$a_m_b} should only has 'input', 'monoselect', 'multiselect', 'fileupload' 4 options!");
 								}
 							}
 						}
@@ -258,6 +259,9 @@ class CPT_METABOXES {
 										}
 									}
 									break;
+
+								case ('multiselect'):
+									break;
 							}
 						}
 					}
@@ -323,6 +327,18 @@ class CPT_METABOXES {
 					break;
 
 				case ( 'fileupload' ):
+					add_meta_box(
+						"{$id}-box",
+						$box_title,
+						$func,
+						$this->posttype,
+						$position,
+						$priority,
+						$box_input_args
+					);
+					break;
+
+				case ( 'multiselect' ):
 					add_meta_box(
 						"{$id}-box",
 						$box_title,
@@ -425,7 +441,7 @@ class CPT_METABOXES {
 	 * :See @https://stackoverflow.com/questions/34131623/wp-user-query-from-meta-key-and-orderby-secondary-meta-key
 	 * 
 	 */
-	public function CPT_METABOXES_type_multiselect_html_content() {
+	public function CPT_METABOXES_type_multiselect_html_content( $post, $callback_args ) {
 
 		// variables
 		global $post;
