@@ -68,14 +68,14 @@ class CPT_MESSAGES {
 			case ('deleting'):
 
 				$func = array($this, "CPT_MESSAGES_{$this->action}_{$this->act_for_type}_{$this->msg_type}_message");
-				$cpt_utils->CPT_INITIAL__if_posttype_call_user_func_array( $func, $this->posttype, array() );
+				$cpt_utils->CPT_UTILS__if_posttype_call_user_func_array( $func, $this->posttype, array() );
 
 				break;
 
 			case ('editing'):
 
 				$func = array($this, "CPT_MESSAGES_{$this->action}_{$this->act_for_type}_{$this->msg_type}_message");
-				$cpt_utils->CPT_INITIAL__if_posttype_call_user_func_array( $func, $this->posttype, array() );
+				$cpt_utils->CPT_UTILS__if_posttype_call_user_func_array( $func, $this->posttype, array() );
 
 				break;
 			
@@ -222,7 +222,7 @@ class CPT_MESSAGES {
 			// move post to trash if is author
 			global $cpt_utils;
 			foreach($this->func_append as $func) {
-				$cpt_utils->CPT_INITIAL__if_posttype_call_user_func_array(
+				$cpt_utils->CPT_UTILS__if_posttype_call_user_func_array(
 					$func,
 					$this->posttype,
 					array(

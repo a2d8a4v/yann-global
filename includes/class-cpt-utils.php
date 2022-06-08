@@ -66,7 +66,7 @@ class CPT_UTILS {
 		return TRUE;
 	}
 
-	public function CPT_INITIAL__if_posttype_call_user_func_array( $call_func, $posttype, $args_call_func=array() ) {
+	public function CPT_UTILS__if_posttype_call_user_func_array( $call_func, $posttype, $args_call_func=array() ) {
 		
 		// validation
 		if (! (is_string($call_func)||is_array($call_func))) {

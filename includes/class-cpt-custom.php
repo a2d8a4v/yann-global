@@ -333,7 +333,7 @@ class CPT_CUSTOM {
 	public function CPT_INITIAL_remove_edit_permilink_button($return, $id, $new_title, $new_slug){
 		if ($this->remove_edit_permilink_button) {
 			global $cpt_utils;
-			return $cpt_utils->CPT_INITIAL__if_posttype_call_user_func_array(
+			return $cpt_utils->CPT_UTILS__if_posttype_call_user_func_array(
 				'preg_replace',
 				$this->posttype,
 				array(

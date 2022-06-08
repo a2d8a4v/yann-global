@@ -246,14 +246,14 @@ class CPT_INITIAL {
 				) as $k 
 			   ) {
 			if (! in_array($k, $supports)) {
-				$cpt_utils->CPT_INITIAL__if_posttype_call_user_func_array('remove_post_type_support', $this->posttype, array($this->posttype, $k));
+				$cpt_utils->CPT_UTILS__if_posttype_call_user_func_array('remove_post_type_support', $this->posttype, array($this->posttype, $k));
 			}
 		}
 	}
 
 	public function CPT_INITIAL_disable_autosave() {
 		global $cpt_utils;
-		$cpt_utils->CPT_INITIAL__if_posttype_call_user_func_array(array($this, 'CPT_INITIAL_disable_autosave_call'), $this->posttype);
+		$cpt_utils->CPT_UTILS__if_posttype_call_user_func_array(array($this, 'CPT_INITIAL_disable_autosave_call'), $this->posttype);
 	}
 	
 	public function CPT_INITIAL_disable_autosave_call() {
