@@ -1,0 +1,13 @@
+{
+    "require": {
+        "composer/installers": "~1.0",
+        "phpexiftool/phpexiftool": "^0.4.1",
+        "voku/stringy": "^6.5",
+        "smalot/pdfparser": "^2.1"
+    },
+    "config": {
+        "allow-plugins": {
+            "composer/installers": true
+        }
+    }
+}
