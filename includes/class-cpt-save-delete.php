@@ -316,7 +316,7 @@ class CPT_SAVE_DELETE {
 					'action' => 'editing',
 					'act_for_type' => 'save_type_multiselect',
 					'action_msg' => array(
-						'non_author' => "必須為本篇作者才可以進行編輯。"
+						'non_author' => "{$this->posttype}-%s 必須為本篇作者 %s 才可以進行編輯。"
 					),
 					'post_meta_key' => $box_input_args['post_meta_key'],
 					'func_append' => array(),
@@ -339,7 +339,7 @@ class CPT_SAVE_DELETE {
 					'action' => 'editing',
 					'act_for_type' => 'save_type_input',
 					'action_msg' => array(
-						'non_author' => "必須為本篇作者才可以進行編輯。"
+						'non_author' => "{$this->posttype}-%s 必須為本篇作者 %s 才可以進行編輯。"
 					),
 					'func_append' => array(),
 					'transient_label' => 'non_author',
@@ -470,7 +470,7 @@ class CPT_SAVE_DELETE {
 					'action' => 'deleting',
 					'act_for_type' => 'multiple_posts',
 					'action_msg' => array(
-						'non_author' => "必須為本篇作者才可以進行刪除。"
+						'non_author' => "{$this->posttype}-%s 必須為本篇作者 %s 才可以進行刪除。"
 					),
 					'func_append' => array(),
 					'transient_label' => 'non_author',
@@ -495,7 +495,7 @@ class CPT_SAVE_DELETE {
 					'action' => 'deleting',
 					'act_for_type' => 'single_post',
 					'action_msg' => array(
-						'non_author' => "必須為本篇作者才可以進行刪除。"
+						'non_author' => "{$this->posttype}-%s 必須為本篇作者 %s 才可以進行刪除。"
 					),
 					'func_append' => array(),
 					'transient_label' => 'non_author',
@@ -528,7 +528,7 @@ class CPT_SAVE_DELETE {
 				'action' => 'deleting',
 				'act_for_type' => 'single_post',
 				'action_msg' => array(
-					'non_author' => "必須為本篇作者才可以進行刪除。"
+					'non_author' => "{$this->posttype}-%s 必須為本篇作者 %s 才可以進行刪除。"
 				),
 				'func_append' => array(
 					array($this, 'CPT_SAVE_DELETE_move_to_trash_sql')

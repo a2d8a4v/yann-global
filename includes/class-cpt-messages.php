@@ -110,7 +110,7 @@ class CPT_MESSAGES {
 			$user_name = get_user_meta( $author_ID , 'last_name' , true ) . get_user_meta( $author_ID , 'first_name' , true );
 
 			foreach($this->action_msg as $k => $msg) {
-				$error->add("CPT_{$this->posttype}_{$this->action}_{$k}_{$this->msg_type}", $msg);
+				$error->add("CPT_{$this->posttype}_{$this->action}_{$k}_{$this->msg_type}", sprintf($msg, strval($post->ID), strval($user_name)));
 			}
 
 			set_transient("CPT_{$this->posttype}_{$this->action}_{$this->transient_label}_{$post->ID}_{$current_USERID}", $error, $this->time_keep);
@@ -151,7 +151,7 @@ class CPT_MESSAGES {
 				if ( empty($tmp) ) {
 
 					foreach($this->action_msg as $k => $msg) {
-						$error->add("CPT_{$this->posttype}_{$this->action}_{$k}_{$this->msg_type}", $msg);
+						$error->add("CPT_{$this->posttype}_{$this->action}_{$k}_{$this->msg_type}", sprintf($msg, strval($post->ID), strval($user_name)));
 					}
 
 				} else if ( !empty($tmp) ) {
@@ -163,8 +163,9 @@ class CPT_MESSAGES {
 						}
 						$names[] = get_user_meta( $user_id , 'last_name' , true ) . get_user_meta( $user_id , 'first_name' , true );
 					}
+					$names[] = $user_name;
 					foreach($this->action_msg as $k => $msg) {
-						$error->add("CPT_{$this->posttype}_{$this->action}_{$k}_{$this->msg_type}", "必須為本篇作者 {$user_name} 以及 ".implode("、",$names)." 共同作品作者才可以進行修改。");
+						$error->add("CPT_{$this->posttype}_{$this->action}_{$k}_{$this->msg_type}", sprintf($msg, strval($post->ID), strval(implode("、",$names))));
 					}
 				}
 			}
@@ -192,7 +193,7 @@ class CPT_MESSAGES {
 			$user_name = get_user_meta( $author_ID , 'last_name' , true ) . get_user_meta( $author_ID , 'first_name' , true );
 
 			foreach($this->action_msg as $k => $msg) {
-				$error->add("CPT_{$this->posttype}_{$this->action}_{$k}_{$this->msg_type}", $msg);
+				$error->add("CPT_{$this->posttype}_{$this->action}_{$k}_{$this->msg_type}", sprintf($msg, strval($post->ID), strval($user_name)));
 			}
 
 			set_transient("CPT_{$this->posttype}_{$this->action}_{$this->transient_label}_{$current_USERID}", $error, $this->time_keep);
@@ -226,7 +227,7 @@ class CPT_MESSAGES {
 			if ( intval($author_ID) !== intval($current_USERID) ) {
 				$user_name = get_user_meta( $author_ID , 'last_name' , true ) . get_user_meta( $author_ID , 'first_name' , true );
 				foreach($this->action_msg as $k => $msg) {
-					$error->add("CPT_{$this->posttype}_{$this->action}_{$k}_{$this->msg_type}_{$postid}", $msg);
+					$error->add("CPT_{$this->posttype}_{$this->action}_{$k}_{$this->msg_type}_{$postid}", sprintf($msg, strval($postid), strval($user_name)));
 				}
 				continue;
 			}
