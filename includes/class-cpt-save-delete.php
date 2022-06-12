@@ -369,8 +369,10 @@ class CPT_SAVE_DELETE {
 		// validation
 		if ($validation = $this->CPT_SAVE_DELETE_save_validation( $post_id, $_post, $_request, $box_input_args )) {
 
-			if ($validation->has_errors()) {
-				return $post_id;
+			if (is_wp_error($validation)) {
+				if ($validation->has_errors()) {
+					return $post_id;
+				}
 			}
 
 			// Its safe for us to save the data !
@@ -397,8 +399,10 @@ class CPT_SAVE_DELETE {
 		// validation
 		if ($validation = $this->CPT_SAVE_DELETE_save_validation( $post_id, $_post, $_request, $box_input_args )) {
 
-			if ($validation->has_errors()) {
-				return $post_id;
+			if (is_wp_error($validation)) {
+				if ($validation->has_errors()) {
+					return $post_id;
+				}
 			}
 
 			// Its safe for us to save the data !
@@ -435,8 +439,10 @@ class CPT_SAVE_DELETE {
 		// validation
 		if ($validation = $this->CPT_SAVE_DELETE_save_validation( $post_id, $_post, $_request, $box_input_args )) {
 
-			if ($validation->has_errors()) {
-				return $post_id;
+			if (is_wp_error($validation)) {
+				if ($validation->has_errors()) {
+					return $post_id;
+				}
 			}
 
 			// Its safe for us to save the data !
