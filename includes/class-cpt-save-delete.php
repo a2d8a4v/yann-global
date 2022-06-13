@@ -367,22 +367,22 @@ class CPT_SAVE_DELETE {
 		$post_meta_key = $box_input_args['post_meta_key'];
 
 		// validation
-		if ($validation = $this->CPT_SAVE_DELETE_save_validation( $post_id, $_post, $_request, $box_input_args )) {
+		$validation = $this->CPT_SAVE_DELETE_save_validation( $post_id, $_post, $_request, $box_input_args );
 
-			if (is_wp_error($validation)) {
-				if ($validation->has_errors()) {
-					return $post_id;
-				}
+		if (is_wp_error($validation)) {
+			if ($validation->has_errors()) {
+				return $post_id;
 			}
-
-			// Its safe for us to save the data !
-			if( isset( $_post[ $id ] ) ) {
-				update_post_meta( $post_id, $post_meta_key, sanitize_text_field( $_post[ $id ] ) );
-			} else {
-				delete_post_meta( $post_id, $post_meta_key );
-			}
-			return $post_id;
 		}
+
+		// Its safe for us to save the data !
+		if( isset( $_post[ $id ] ) ) {
+			update_post_meta( $post_id, $post_meta_key, sanitize_text_field( $_post[ $id ] ) );
+		} else {
+			delete_post_meta( $post_id, $post_meta_key );
+		}
+		return $post_id;
+
 	}
 
 	/**
@@ -397,22 +397,22 @@ class CPT_SAVE_DELETE {
 		$post_meta_key = $box_input_args['post_meta_key'];
 
 		// validation
-		if ($validation = $this->CPT_SAVE_DELETE_save_validation( $post_id, $_post, $_request, $box_input_args )) {
+		$validation = $this->CPT_SAVE_DELETE_save_validation( $post_id, $_post, $_request, $box_input_args );
 
-			if (is_wp_error($validation)) {
-				if ($validation->has_errors()) {
-					return $post_id;
-				}
+		if (is_wp_error($validation)) {
+			if ($validation->has_errors()) {
+				return $post_id;
 			}
-
-			// Its safe for us to save the data !
-			if( isset( $_post[ $id ] ) ) {
-				update_post_meta( $post_id, $post_meta_key, sanitize_text_field( $_post[ $id ] ) );
-			} else {
-				delete_post_meta( $post_id, $post_meta_key );
-			}
-			return $post_id;
 		}
+
+		// Its safe for us to save the data !
+		if( isset( $_post[ $id ] ) ) {
+			update_post_meta( $post_id, $post_meta_key, sanitize_text_field( $_post[ $id ] ) );
+		} else {
+			delete_post_meta( $post_id, $post_meta_key );
+		}
+		return $post_id;
+
 	}
 
 	/**
@@ -437,22 +437,22 @@ class CPT_SAVE_DELETE {
 		$post_meta_key = $box_input_args['post_meta_key'];
 
 		// validation
-		if ($validation = $this->CPT_SAVE_DELETE_save_validation( $post_id, $_post, $_request, $box_input_args )) {
+		$validation = $this->CPT_SAVE_DELETE_save_validation( $post_id, $_post, $_request, $box_input_args );
 
-			if (is_wp_error($validation)) {
-				if ($validation->has_errors()) {
-					return $post_id;
-				}
+		if (is_wp_error($validation)) {
+			if ($validation->has_errors()) {
+				return $post_id;
 			}
-
-			// Its safe for us to save the data !
-			if( isset( $_post[ $id ] ) ) {
-				update_post_meta( $post_id, $post_meta_key, sanitize_text_field( $_post[ $id ] ) );
-			} else {
-				delete_post_meta( $post_id, $post_meta_key );
-			}
-			return $post_id;
 		}
+
+		// Its safe for us to save the data !
+		if( isset( $_post[ $id ] ) ) {
+			update_post_meta( $post_id, $post_meta_key, sanitize_text_field( $_post[ $id ] ) );
+		} else {
+			delete_post_meta( $post_id, $post_meta_key );
+		}
+		return $post_id;
+
 	}
 
 	/**
