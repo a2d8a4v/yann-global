@@ -95,6 +95,7 @@ class CPT_METABOXES {
 									'priority',
 									'box_input_type',
 									'box_input_args',
+									'required',
 								)
 							)) && (! in_array(
 								$a_m_b,
@@ -131,6 +132,16 @@ class CPT_METABOXES {
 								) {
 									throw new Exception("Value of key {$a_m_b} should only has 'input', 'monoselect', 'multiselect', 'fileupload' 4 options!");
 								}
+							}
+						}
+						if (in_array($a_m_b,
+								array(
+									'required',
+								)
+							)
+						) {
+							if (! is_bool($a_m_b_v)) {
+								throw new Exception("Value of key {$a_m_b} should be a boolean");
 							}
 						}
 						if ($a_m_b === 'box_input_args') {
@@ -295,10 +306,12 @@ class CPT_METABOXES {
 			$position = $metabox_args['position'];
 			$priority = $metabox_args['priority'];
 			$box_title = $metabox_args['box_title'];
+			$required = $metabox_args['required'];
 
 			// callback args
 			$box_input_args = $metabox_args['box_input_args'];
 			$box_input_args['id'] = $id;
+			$box_input_args['required'] = $required;
 
 			switch ( $type ) {
 
@@ -371,11 +384,17 @@ class CPT_METABOXES {
 		$placeholder = $box_input_args['placeholder'];
 		$post_meta_key = $box_input_args['post_meta_key'];
 		$invalid_feedbacks = $box_input_args['invalid_feedbacks'];
+		$required = $box_input_args['required'];
 
 		// metas
 		$meta_get = get_post_meta( $post->ID , $post_meta_key , true );
 		$meta_field_data = $meta_get ? $meta_get : '';
 		$input_placeholder = empty($meta_field_data) ? $placeholder : $meta_field_data;
+
+		// title
+		if ($required) {
+			$input_title .= '*';
+		}
 
 		// content
 		echo '<input hidden type="text" name="'.$id.'_nonce" value="' . wp_create_nonce() . '">
@@ -408,10 +427,16 @@ class CPT_METABOXES {
 		$post_meta_key = $box_input_args['post_meta_key'];
 		$options = $box_input_args['options'];
 		$invalid_feedbacks = $box_input_args['invalid_feedbacks'];
+		$required = $box_input_args['required'];
 
 		// metas
 		$meta_get = get_post_meta( $post->ID , $post_meta_key , true );
 		$meta_field_data = $meta_get ? $meta_get : '';
+
+		// title
+		if ($required) {
+			$input_title .= '*';
+		}
 
 		// content
 		echo '<input hidden type="text" name="'.$id.'_nonce" value="' . wp_create_nonce() . '">';
@@ -452,7 +477,13 @@ class CPT_METABOXES {
 		$search_type = $box_input_args['search_type'];
 		$search_type_args = $box_input_args['search_type_args'];
 		$invalid_feedbacks = $box_input_args['invalid_feedbacks'];
+		$required = $box_input_args['required'];
 	
+		// title
+		if ($required) {
+			$input_title .= '*';
+		}
+
 		// html init
 		$html = "";
 	
