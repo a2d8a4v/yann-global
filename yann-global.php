@@ -13,6 +13,7 @@
  * Text Domain:       yann-global
  */
 
+require_once dirname( __FILE__ ) . '/includes/class-variables.php';
 require_once dirname( __FILE__ ) . '/includes/class-global-tweak.php';
 require_once dirname( __FILE__ ) . '/includes/class-cpt-initial.php';
 require_once dirname( __FILE__ ) . '/includes/class-cpt-utils.php';
@@ -64,6 +65,12 @@ $utils = new UTILS();
  */
 global $cpt_utils;
 $cpt_utils = new CPT_UTILS();
+
+/**
+ * Init the VARIABLES.
+ */
+global $variables;
+$variables = new VARIABLES();
 
 /**
  * Functions
