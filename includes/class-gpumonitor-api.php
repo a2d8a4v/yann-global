@@ -124,7 +124,9 @@ class GPU_MONITOR_API {
 			}
 
 			// Cache $response to sidestep useless API requests
-			set_transient( $this->cacheGPUMONITOR, $response, intval($time) );
+			if (intval($time) != 0) {
+				set_transient( $this->cacheGPUMONITOR, $response, intval($time) );
+			}
 		}
 
 		if ( $cachedGPUMONITOR ) {

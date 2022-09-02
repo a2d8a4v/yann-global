@@ -35,6 +35,9 @@ class GLOBAL_CONTROL_GPU_MONITOR {
 		$this->gpumonitor_port = $this->plugin."_setting_section_gpumonitor_port";
 		$this->gpumonitor_slugpage = $this->plugin."_setting_section_gpumonitor_slug";
 		$this->gpumonitor_timeintervalupdate = $this->plugin."_setting_section_gpumonitor_timeupdateinterval";
+		$this->gpumonitor_openfanandpower = $this->plugin."_setting_section_gpumonitor_openfanandpower";
+		$this->gpumonitor_showuserscollapsebutton = $this->plugin."_setting_section_gpumonitor_showuserscollapsebutton";
+		$this->gpumonitor_prceshownforloginusers = $this->plugin."_gpumonitor_prceshownforloginusers";
 
 		$this->YANN_root_user_id = 1;
 		$this->add_hooks();
@@ -121,12 +124,48 @@ class GLOBAL_CONTROL_GPU_MONITOR {
 				'class' => 'row-'.$this->plugin.'_section_callback_gpumonitor_timeintervalupdate', // for <tr> element
 			)
 		);
+		add_settings_field(
+			$this->gpumonitor_openfanandpower,
+			'Show FAN and POWER',
+			array( $this , $this->plugin.'_section_callback_gpumonitor_openfanandpower' ), // function which prints the field
+			'general', // page slug
+			$this->section_id, // section ID
+			array( 
+				'label_for' => $this->plugin.'_section_callback_gpumonitor_openfanandpower',
+				'class' => 'row-'.$this->plugin.'_section_callback_gpumonitor_openfanandpower', // for <tr> element
+			)
+		);
+		add_settings_field(
+			$this->gpumonitor_showuserscollapsebutton,
+			'Show users on process collapsing button',
+			array( $this , $this->plugin.'_section_callback_gpumonitor_showuserscollapsebutton' ), // function which prints the field
+			'general', // page slug
+			$this->section_id, // section ID
+			array( 
+				'label_for' => $this->plugin.'_section_callback_gpumonitor_showuserscollapsebutton',
+				'class' => 'row-'.$this->plugin.'_section_callback_gpumonitor_showuserscollapsebutton', // for <tr> element
+			)
+		);
+		add_settings_field(
+			$this->gpumonitor_prceshownforloginusers,
+			'Processes only be shown for the login users',
+			array( $this , $this->plugin.'_section_callback_gpumonitor_prceshownforloginusers' ), // function which prints the field
+			'general', // page slug
+			$this->section_id, // section ID
+			array( 
+				'label_for' => $this->plugin.'_section_callback_gpumonitor_prceshownforloginusers',
+				'class' => 'row-'.$this->plugin.'_section_callback_gpumonitor_prceshownforloginusers', // for <tr> element
+			)
+		);
 
 		// register setting to db
 		register_setting('general', $this->gpumonitor_domainname, 'esc_url' );
 		register_setting('general', $this->gpumonitor_port, 'sanitize_text_field');
 		register_setting('general', $this->gpumonitor_slugpage, 'sanitize_text_field');
 		register_setting('general', $this->gpumonitor_timeintervalupdate, 'sanitize_text_field');
+		register_setting('general', $this->gpumonitor_openfanandpower, 'sanitize_text_field');
+		register_setting('general', $this->gpumonitor_showuserscollapsebutton, 'sanitize_text_field');
+		register_setting('general', $this->gpumonitor_prceshownforloginusers, 'sanitize_text_field');
 	}
 
 	public function GLOBAL_CONTROL_GPU_MONITOR_section_callback() {
@@ -151,6 +190,21 @@ class GLOBAL_CONTROL_GPU_MONITOR {
 	public function GLOBAL_CONTROL_GPU_MONITOR_section_callback_gpumonitor_timeintervalupdate() {
 		$option = get_option( $this->gpumonitor_timeintervalupdate, "");
 		echo '<input type="text" id="'.$this->gpumonitor_timeintervalupdate.'" name="'.$this->gpumonitor_timeintervalupdate.'" value="'.$option.'" placeholder="請輸入更新時間間隔"></input>';
+	}
+
+	public function GLOBAL_CONTROL_GPU_MONITOR_section_callback_gpumonitor_openfanandpower() {
+		$option = get_option( $this->gpumonitor_openfanandpower, "");
+		echo '<input type="checkbox" id="'.$this->gpumonitor_openfanandpower.'" name="'.$this->gpumonitor_openfanandpower.'" value="1" '.checked($option, '1', false).'></input>';
+	}
+
+	public function GLOBAL_CONTROL_GPU_MONITOR_section_callback_gpumonitor_showuserscollapsebutton() {
+		$option = get_option( $this->gpumonitor_showuserscollapsebutton, "");
+		echo '<input type="checkbox" id="'.$this->gpumonitor_showuserscollapsebutton.'" name="'.$this->gpumonitor_showuserscollapsebutton.'" value="1" '.checked($option, '1', false).'></input>';
+	}
+
+	public function GLOBAL_CONTROL_GPU_MONITOR_section_callback_gpumonitor_prceshownforloginusers() {
+		$option = get_option( $this->gpumonitor_prceshownforloginusers, "");
+		echo '<input type="checkbox" id="'.$this->gpumonitor_prceshownforloginusers.'" name="'.$this->gpumonitor_prceshownforloginusers.'" value="1" '.checked($option, '1', false).'></input>';
 	}
 }
 
